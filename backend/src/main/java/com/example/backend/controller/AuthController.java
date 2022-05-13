@@ -20,7 +20,7 @@ import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 @PreAuthorize("permitAll()")
 @RequiredArgsConstructor
 public class AuthController {
@@ -29,6 +29,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
+    @PostMapping("/signin")
     ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(),

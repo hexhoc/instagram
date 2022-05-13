@@ -40,7 +40,7 @@ public class User implements UserDetails {
 
     @ElementCollection(targetClass = UserRole.class) // for mapping non-entities (embeddable or basic)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<UserRole> roles = new HashSet<>();
+    private Set<UserRole> role = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
