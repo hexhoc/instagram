@@ -13,7 +13,8 @@
 
 ## 2. Installation
 1. Setup db connection in application.properties and create new db "instagram"
-
+2. Run backend app
+3. profit
 
 ## 3. Security
 
