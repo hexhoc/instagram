@@ -60,7 +60,8 @@ public class UserServiceImpl implements UserService {
         return getUserByPrincipal(principal);
     }
 
-    private User getUserByPrincipal(Principal principal) {
+    @Override
+    public User getUserByPrincipal(Principal principal) {
         String username = principal.getName();
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found with username " + username));
