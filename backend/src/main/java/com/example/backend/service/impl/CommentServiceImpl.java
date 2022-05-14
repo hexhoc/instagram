@@ -28,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final PostService postService;
 
 
+    @Override
     public Comment saveComment(Long postId, CommentDTO commentDTO, Principal principal) {
         User user = userService.getUserByPrincipal(principal);
         Post post = postService.getPostById(postId, principal);
