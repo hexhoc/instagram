@@ -38,7 +38,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
 
         LOG.info("Uploading image profile to user {}", user.getUsername());
 
-        ImageModel userProfileImage = imageRepository.findByUserId(user.getId()).orElse(null);
+        ImageModel userProfileImage = imageRepository.findProfileImageByUserId(user.getId()).orElse(null);
         if (!ObjectUtils.isEmpty(userProfileImage)) {
             imageRepository.delete(userProfileImage);
         }
@@ -56,12 +56,13 @@ public class ImageUploadServiceImpl implements ImageUploadService {
 
         User user = userService.getUserByPrincipal(principal);
         Post post = user.getPosts().stream()
-                .filter(p->p.equals(postId))
+                .filter(p->p.getId().equals(postId))
                 .collect(toSinglePostCollector());
 
         LOG.info("Uploading image profile to post {}", postId);
 
         ImageModel imageModel = new ImageModel();
+        imageModel.setUserId(user.getId());
         imageModel.setPostId(postId);
         imageModel.setImageBytes(compressBytes(file.getBytes()));
         imageModel.setName(file.getOriginalFilename());
@@ -73,7 +74,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
     public ImageModel getImageToUser(Principal principal) {
         User user = userService.getUserByPrincipal(principal);
 
-        ImageModel imageModel = imageRepository.findByUserId(user.getId()).orElse(null);
+        ImageModel imageModel = imageRepository.findProfileImageByUserId(user.getId()).orElse(null);
         if (!ObjectUtils.isEmpty(imageModel)) {
             imageModel.setImageBytes(decompressBytes(imageModel.getImageBytes()));
         }

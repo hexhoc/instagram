@@ -2,6 +2,7 @@ package com.example.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -17,6 +18,7 @@ public class ImageModel {
     private String name;
 
     @Lob
+    @Type(type="org.hibernate.type.BinaryType")
     @Column(columnDefinition = "bytea")
     private byte[] imageBytes;
 

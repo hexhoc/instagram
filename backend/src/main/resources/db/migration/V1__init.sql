@@ -35,9 +35,7 @@ create table image_models
     name        varchar(255) not null,
     image_bytes bytea,
     user_id     int8         not null,
-    post_id     int8         not null,
-    constraint fk_user_id foreign key (user_id) references users (id) ON DELETE SET NULL ON UPDATE NO ACTION ,
-    constraint fk_post_id foreign key (post_id) references posts (id) ON DELETE SET NULL ON UPDATE NO ACTION
+    post_id     int8         not null
 );
 
 drop table if exists comments;

@@ -3,6 +3,8 @@ package com.example.backend.entity;
 import com.example.backend.entity.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.Version;
@@ -14,7 +16,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +41,7 @@ public class User implements UserDetails {
     @Column(length = 3000)
     private String password;
 
-    @ElementCollection(targetClass = UserRole.class) // for mapping non-entities (embeddable or basic)
+    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER) // for mapping non-entities (embeddable or basic)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     private Set<UserRole> role = new HashSet<>();
 
