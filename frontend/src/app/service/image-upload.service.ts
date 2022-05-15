@@ -29,7 +29,7 @@ export class ImageUploadService {
     return this.http.get(IMAGE_API + 'profileImage');
   }
 
-  getImageToPost(postId: number): any {
+  getImageToPost(postId: number | undefined): any {
     return this.http.get(IMAGE_API + postId + '/image');
   }
 
