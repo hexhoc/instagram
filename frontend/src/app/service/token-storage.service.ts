@@ -26,6 +26,9 @@ export class TokenStorageService {
 
   public getUser(): any {
     let user:string = window.sessionStorage.getItem(USER_KEY) ?? '';
+    if (user.length === 0) {
+      return null;
+    }
     return JSON.parse(user);
   }
 
