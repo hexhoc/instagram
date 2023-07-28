@@ -10,6 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PostLikeCommand {
+    //TODO: add description and constraint
+
     private UUID userId;
     private UUID postId;
 }

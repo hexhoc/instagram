@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CommentCommand {
+    //TODO: add description and constraint
     private UUID postId;
     private String message;
 }

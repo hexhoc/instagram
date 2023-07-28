@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CommentQuery {
+    //TODO: add description and constraint
     private UUID id;
     private UUID postId;
     private String message;

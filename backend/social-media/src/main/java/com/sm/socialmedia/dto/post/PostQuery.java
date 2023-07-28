@@ -13,6 +13,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PostQuery {
+    //TODO: add description and constraint
+
     private UUID id;
     private String title;
     private String content;
