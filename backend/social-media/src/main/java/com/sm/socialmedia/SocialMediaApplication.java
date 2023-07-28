@@ -9,7 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SocialMediaApplication {
-
+    //TODO: add elasticsearch
+    //TODO: add notification service
+    //TODO: add feed service
     public static void main(String[] args) {
         SpringApplication.run(SocialMediaApplication.class, args);
     }
