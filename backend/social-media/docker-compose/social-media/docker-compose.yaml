@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  gateway-service:
+    image: hexhoc/social-media-gateway-service
+    container_name: gateway-service
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:3001
+    networks:
+      - social
+
+  product-service:
+    image: hexhoc/social-media-main-service
+    container_name: social-media-main-service
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9000
+    networks:
+      - social
+
+  frontend:
+    image: hexhoc/social-media-frontend
+    container_name: frontend
+    ports:
+      - "8099:80"
+networks:
+  social:
+    external: true

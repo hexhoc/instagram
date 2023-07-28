@@ -1,0 +1,118 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet id="001-initial" author="zhuravskiy_vv">
+        <comment>
+        </comment>
+        <sql>
+            CREATE TABLE users
+            (
+                id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                first_name VARCHAR(255) NOT NULL,
+                last_name  VARCHAR(255) NOT NULL,
+                email      VARCHAR(100) NOT NULL,
+                bio        TEXT,
+                username   VARCHAR(255) NOT NULL,
+                password   VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT now(),
+                updated_at TIMESTAMP NOT NULL,
+                version INT
+
+            );
+
+            CREATE TABLE groups
+            (
+                id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                name        VARCHAR(255) NOT NULL,
+                description TEXT,
+                creator_id  UUID REFERENCES users (id) ON DELETE NO ACTION,
+                created_at TIMESTAMP NOT NULL DEFAULT now(),
+                updated_at TIMESTAMP NOT NULL,
+                version INT
+            );
+
+            CREATE TABLE posts
+            (
+                id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                title      VARCHAR(255),
+                content    TEXT,
+                user_id    UUID REFERENCES users (id) ON DELETE NO ACTION,
+                group_id   UUID REFERENCES groups (id) ON DELETE NO ACTION,
+                created_at TIMESTAMP NOT NULL DEFAULT now(),
+                updated_at TIMESTAMP NOT NULL DEFAULT now(),
+                version    INT
+            );
+
+            CREATE TABLE post_analytics
+            (
+                id      UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                post_id UUID REFERENCES posts (id),
+                likes   INT NOT NULL DEFAULT 0,
+                watched INT NOT NULL DEFAULT 0
+            );
+
+            CREATE TABLE post_user_likes
+            (
+                id       UUID               DEFAULT gen_random_uuid() PRIMARY KEY,
+                post_id  UUID REFERENCES posts (id),
+                user_id  UUID      NOT NULL,
+                liked_at TIMESTAMP NOT NULL DEFAULT now()
+            );
+
+            CREATE TABLE comments
+            (
+                id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                post_id    UUID REFERENCES posts (id),
+                message    TEXT,
+                created_at TIMESTAMP NOT NULL DEFAULT now(),
+                updated_at TIMESTAMP NOT NULL DEFAULT now()
+            );
+
+            CREATE TABLE media_content
+            (
+                id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                name        VARCHAR(255) NOT NULL,
+                image_bytes BYTEA,
+                user_id     UUID         REFERENCES users (id),
+                post_id     UUID         REFERENCES posts (id)
+            );
+
+            CREATE TABLE user_follow
+            (
+                id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                follower_id  UUID REFERENCES users (id),
+                following_id UUID REFERENCES users (id)
+            );
+
+            CREATE TABLE group_follow
+            (
+                id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                follower_id UUID REFERENCES users (id),
+                group_id    UUID REFERENCES groups (id)
+            );
+
+            CREATE TABLE notification
+            (
+                id         UUID               DEFAULT gen_random_uuid() PRIMARY KEY,
+                user_id    UUID REFERENCES users (id),
+                type       VARCHAR   NOT NULL CHECK (type IN ('LIKE', 'COMMENT', 'SHARE', 'FOLLOWER')),
+                message    TEXT,
+                is_read    BOOLEAN   NOT NULL DEFAULT FALSE,
+                created_at TIMESTAMP NOT NULL DEFAULT now(),
+                updated_at TIMESTAMP NOT NULL DEFAULT now()
+            );
+
+            INSERT INTO users (id, first_name, last_name, email, bio, username, password, updated_at, version)
+            VALUES
+                ('c589fd51-98d1-4b39-b5a0-fac8d309501f','John', 'Doe', 'john@example.com', 'Hello, I am John.', 'johndoe', 'password123', NOW(), 1),
+                ('c589fd51-98d1-4b39-b5a0-fac8d309502f','Jane', 'Smith', 'jane@example.com', 'Hi there, I am Jane.', 'janesmith', 'p@ssword456', NOW(), 1);
+
+            INSERT INTO groups (id, name, description, creator_id, updated_at, version)
+            VALUES
+                ('c589fd51-98d1-4b39-b5a0-fac8d309490f', 'Technology Enthusiasts', 'A group for tech discussions', 'c589fd51-98d1-4b39-b5a0-fac8d309501f', NOW(), 1),
+                ('c589fd51-98d1-4b39-b5a0-fac8d309491f', 'Travel Lovers', 'Explore the world together', 'c589fd51-98d1-4b39-b5a0-fac8d309502f', NOW(), 1);
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>
