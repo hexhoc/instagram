@@ -12,6 +12,8 @@ public class SocialMediaApplication {
     //TODO: add elasticsearch
     //TODO: add notification service
     //TODO: add feed service
+    //TODO: direct message
+    //TODO: friends
     public static void main(String[] args) {
         SpringApplication.run(SocialMediaApplication.class, args);
     }
