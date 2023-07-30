@@ -14,6 +14,10 @@ public class SocialMediaApplication {
     //TODO: add feed service
     //TODO: direct message
     //TODO: friends
+    //TODO: add security constraint
+    //TODO: add cache (memoizer)
+    //TODO: make postService.like asynced
+
     public static void main(String[] args) {
         SpringApplication.run(SocialMediaApplication.class, args);
     }
