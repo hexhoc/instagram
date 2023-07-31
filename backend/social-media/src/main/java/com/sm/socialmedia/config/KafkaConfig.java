@@ -21,7 +21,7 @@ import org.springframework.kafka.core.ProducerFactory;
 public class KafkaConfig {
 
 //    @Value("${spring.kafka.topic.notification}")
-    public String NOTIFICATION_TOPIC = "notification";
+    public static final String NOTIFICATION_TOPIC = "notification";
 
     private final KafkaProperties kafkaProperties; // Autowired. Get data from application.yaml (prefix = "spring.kafka")
 

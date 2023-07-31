@@ -9,6 +9,7 @@ import com.sm.socialmedia.dto.comment.CommentCommand;
 import com.sm.socialmedia.dto.comment.CommentQuery;
 import com.sm.socialmedia.entity.Comment;
 import com.sm.socialmedia.mapper.CommentMapper;
+import com.sm.socialmedia.messages.MessageSender;
 import com.sm.socialmedia.repository.CommentRepository;
 import com.sm.socialmedia.repository.specification.CommentSpecification;
 import jakarta.transaction.Transactional;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final MessageSender messageSender;
 
     public List<CommentQuery> findAllByCriteria(Integer userId, Integer postId, Integer page, Integer limit) {
         var specification = new CommentSpecification(userId, postId);
@@ -39,7 +41,8 @@ public class CommentService {
     }
 
     public void create(CommentCommand commentCommand) {
-        commentRepository.save(commentMapper.toEntity(commentCommand));
+        var comment = commentRepository.save(commentMapper.toEntity(commentCommand));
+        messageSender.sendCommentNotification(comment);
     }
 
     @Transactional

@@ -63,6 +63,7 @@
             CREATE TABLE comments
             (
                 id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                user_id    UUID REFERENCES users (id),
                 post_id    UUID REFERENCES posts (id),
                 message    TEXT,
                 created_at TIMESTAMP NOT NULL DEFAULT now(),

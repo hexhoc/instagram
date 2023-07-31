@@ -5,13 +5,18 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import com.sm.socialmedia.config.KafkaConfig;
+import com.sm.socialmedia.dto.notification.NotificationCommand;
 import com.sm.socialmedia.dto.post.PostCommand;
 import com.sm.socialmedia.dto.post.PostLikeCommand;
 import com.sm.socialmedia.dto.post.PostQuery;
+import com.sm.socialmedia.entity.Notification;
 import com.sm.socialmedia.entity.Post;
 import com.sm.socialmedia.entity.PostAnalytic;
 import com.sm.socialmedia.entity.PostUserLike;
 import com.sm.socialmedia.mapper.PostMapper;
+import com.sm.socialmedia.messages.Message;
+import com.sm.socialmedia.messages.MessageSender;
 import com.sm.socialmedia.repository.PostAnalyticRepository;
 import com.sm.socialmedia.repository.PostUserLikeRepository;
 import com.sm.socialmedia.repository.PostRepository;
@@ -28,6 +33,7 @@ public class PostService {
     private final PostUserLikeRepository postUserLikeRepository;
     private final PostAnalyticRepository postAnalyticRepository;
     private final PostMapper postMapper;
+    private final MessageSender messageSender;
 
     public List<PostQuery> findAllByCriteria(UUID userId, UUID groupId, Integer page, Integer limit) {
         var specification = new PostSpecification(userId, groupId);
@@ -69,14 +75,17 @@ public class PostService {
                                     .watched(0)
                                     .build());
 
-        var postUserLike = postUserLikeRepository.findByUserIdAndPostId(
+        var postUserLikeOpt = postUserLikeRepository.findByUserIdAndPostId(
                 postLikeCommand.getUserId(),
                 postLikeCommand.getPostId());
-        if (postUserLike.isPresent()) {
-            postUserLikeRepository.deleteById(postUserLike.get().getId());
+
+        PostUserLike postUserLike;
+        if (postUserLikeOpt.isPresent()) {
+            postUserLikeRepository.deleteById(postUserLikeOpt.get().getId());
             postAnalytic.setLikes(postAnalytic.getLikes() - 1);
+            postUserLike = postUserLikeOpt.get();
         } else {
-            postUserLikeRepository.save(PostUserLike.builder()
+            postUserLike = postUserLikeRepository.save(PostUserLike.builder()
                                                     .postId(postLikeCommand.getPostId())
                                                     .userId(postLikeCommand.getUserId())
                                                     .likedAt(LocalDateTime.now())
@@ -85,5 +94,8 @@ public class PostService {
         }
 
         postAnalyticRepository.save(postAnalytic);
+
+        messageSender.sendLikePostNotification(postUserLike);
     }
+
 }
