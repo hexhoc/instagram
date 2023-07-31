@@ -13,7 +13,6 @@ public class SocialMediaApplication {
     //TODO: add notification service
     //TODO: add feed service
     //TODO: direct message
-    //TODO: friends
     //TODO: add security constraint
     //TODO: add cache (memoizer)
     //TODO: make postService.like asynced
