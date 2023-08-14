@@ -19,28 +19,28 @@ public class FollowService {
     private final UserFollowRepository userFollowRepository;
     private final GroupFollowRepository groupFollowRepository;
 
-    public List<UUID> getFollowersForUser(UUID userId) {
-        var userFollowList = userFollowRepository.findAllByFollowingId(userId);
+    public List<UUID> getFollowers(UUID userId) {
+        var userFollowList = userFollowRepository.findAllByFollowedId(userId);
         return userFollowList.stream()
-                             .map(UserFollow::getUserId)
+                             .map(UserFollow::getFollowerId)
                              .toList();
     }
 
-    public List<UUID> getUsersFollowedByUser(UUID userId) {
-        var userFollowList = userFollowRepository.findAllByUserId(userId);
+    public List<UUID> getFollowed(UUID userId) {
+        var userFollowList = userFollowRepository.findAllByFollowerId(userId);
         return userFollowList.stream()
-                             .map(UserFollow::getUserId)
+                             .map(UserFollow::getFollowedId)
                              .toList();
     }
 
-    public List<UUID> getUsersFollowingGroup(UUID userId) {
+    public List<UUID> getGroupFollowers(UUID userId) {
         var groupFollowList = groupFollowRepository.findAllByFollowerId(userId);
         return groupFollowList.stream()
                              .map(GroupFollow::getGroupId)
                              .toList();
     }
 
-    public List<UUID> getFollowersForGroup(UUID groupId) {
+    public List<UUID> getFollowedGroups(UUID groupId) {
         var groupFollowList = groupFollowRepository.findAllByGroupId(groupId);
         return groupFollowList.stream()
                               .map(GroupFollow::getFollowerId)
@@ -49,16 +49,16 @@ public class FollowService {
     }
 
     public void followUser(FollowCommand followCommand) {
-        var userFollowOpt = userFollowRepository.findByUserIdAndFollowingId(
+        var userFollowOpt = userFollowRepository.findByFollowerIdAndFollowedId(
                 followCommand.getUserId(),
-                followCommand.getFollowingId());
+                followCommand.getFollowedId());
 
         userFollowOpt.ifPresentOrElse(userFollow -> {
             userFollowRepository.delete(userFollow);
         }, () -> {
             var userFollow = new UserFollow();
-            userFollow.setUserId(followCommand.getUserId());
-            userFollow.setFollowingId(followCommand.getFollowingId());
+            userFollow.setFollowerId(followCommand.getUserId());
+            userFollow.setFollowedId(followCommand.getFollowedId());
             userFollowRepository.save(userFollow);
         });
     }
@@ -66,14 +66,14 @@ public class FollowService {
     public void followGroup(FollowCommand followCommand) {
         var groupFollowOpt = groupFollowRepository.findByFollowerIdAndGroupId(
                 followCommand.getUserId(),
-                followCommand.getFollowingId());
+                followCommand.getFollowedId());
 
         groupFollowOpt.ifPresentOrElse(groupFollow -> {
             groupFollowRepository.delete(groupFollow);
         }, () -> {
             var groupFollow = new GroupFollow();
             groupFollow.setFollowerId(followCommand.getUserId());
-            groupFollow.setGroupId(followCommand.getFollowingId());
+            groupFollow.setGroupId(followCommand.getFollowedId());
             groupFollowRepository.save(groupFollow);
         });
     }

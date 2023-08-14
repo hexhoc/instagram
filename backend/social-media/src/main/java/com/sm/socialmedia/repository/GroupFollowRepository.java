@@ -13,8 +13,8 @@ import org.springframework.stereotype.Repository;
 public interface GroupFollowRepository extends JpaRepository<GroupFollow, UUID> {
 
     List<GroupFollow> findAllByFollowerId(UUID userId);
-    List<GroupFollow> findAllByGroupId(UUID userId);
+    List<GroupFollow> findAllByGroupId(UUID groupId);
 
-    Optional<GroupFollow> findByFollowerIdAndGroupId(UUID userId, UUID followingId);
+    Optional<GroupFollow> findByFollowerIdAndGroupId(UUID userId, UUID groupId);
 
 }

@@ -37,18 +37,18 @@ public class MediaContentController {
         return new ResponseEntity<>(mediaContent, HttpStatus.OK);
     }
 
-    @GetMapping("/posts/{postId}")
-    public ResponseEntity<List<MediaContent>> getPostMedia(@PathVariable UUID postId) {
-        var mediaContents = mediaContentService.getPostMedia(postId);
-        return new ResponseEntity<>(mediaContents, HttpStatus.OK);
-    }
-
     @PostMapping("/users/{userId}")
     public ResponseEntity<String> uploadUserMedia(@PathVariable UUID userId,
                                                   @RequestParam MultipartFile file) throws IOException {
 
         mediaContentService.uploadUserMedia(file, userId);
         return ResponseEntity.ok("Media uploaded Successfully");
+    }
+
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<List<MediaContent>> getPostMedia(@PathVariable UUID postId) {
+        var mediaContents = mediaContentService.getPostMedia(postId);
+        return new ResponseEntity<>(mediaContents, HttpStatus.OK);
     }
 
     @PostMapping("/posts/{postId}")

@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,17 +37,17 @@ public class UserFollow {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable=false, updatable=false)
-    private User user;
+    @JoinColumn(name = "follower_id", insertable=false, updatable=false)
+    private User follower;
 
-    @Column(name = "user_id")
-    private UUID userId;
+    @Column(name = "follower_id")
+    private UUID followerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_id", insertable=false, updatable=false)
-    private User following;
+    @JoinColumn(name = "followed_id", insertable=false, updatable=false)
+    private User followed;
 
-    @Column(name = "following_id")
-    private UUID followingId;
+    @Column(name = "followed_id")
+    private UUID followedId;
 
 }

@@ -18,7 +18,6 @@
                 created_at TIMESTAMP NOT NULL DEFAULT now(),
                 updated_at TIMESTAMP NOT NULL,
                 version INT
-
             );
 
             CREATE TABLE groups
@@ -81,16 +80,16 @@
 
             CREATE TABLE user_follow
             (
-                id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-                user_id      UUID REFERENCES users (id),
-                following_id UUID REFERENCES users (id)
+                id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                follower_id UUID REFERENCES users (id),
+                followed_id UUID REFERENCES users (id)
             );
 
             CREATE TABLE group_follow
             (
-                id       UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-                user_id  UUID REFERENCES users (id),
-                group_id UUID REFERENCES groups (id)
+                id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                follower_id UUID REFERENCES users (id),
+                group_id    UUID REFERENCES groups (id)
             );
 
             CREATE TABLE notification

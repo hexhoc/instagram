@@ -22,59 +22,79 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
-@RequestMapping("/api/v1/follow")
+@RequestMapping("/api/v1")
 @Tag(name = "Follows", description = "Follow API")
 @Log4j2
 public class FollowController {
 
     private final FollowService followService;
 
-    // GET /users/{userId}/followers - Get followers for a user
-    @GetMapping("/users/{userId}/followers")
-    @Operation(summary = "Get followers for a user", responses = {
+    /**
+     * Get those who follow me
+     * @param userId current user id
+     * @return my followers
+     */
+    @GetMapping("/followers/{userId}")
+    @Operation(summary = "Get those who follow me", responses = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "500", description = "Server error")
     })
-    public ResponseEntity<List<UUID>> getFollowersForUser(@PathVariable UUID userId) {
-        return ResponseEntity.ok(followService.getFollowersForUser(userId));
+    public ResponseEntity<List<UUID>> getFollowers(@PathVariable UUID userId) {
+        return ResponseEntity.ok(followService.getFollowers(userId));
     }
 
-    // GET /users/{userId}/following - Get users followed by a user
-    @GetMapping("/users/{userId}/following")
-    @Operation(summary = "Get users followed by a user", responses = {
+    /**
+     * Get those I follow
+     * @param userId current user id
+     * @return followed users
+     */
+    @GetMapping("/followed/{userId}")
+    @Operation(summary = "Get those I follow", responses = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "500", description = "Server error")
     })
-    public ResponseEntity<List<UUID>> getUsersFollowedByUser(@PathVariable UUID userId) {
-        return ResponseEntity.ok(followService.getUsersFollowedByUser(userId));
+    public ResponseEntity<List<UUID>> getFollowed(@PathVariable UUID userId) {
+        return ResponseEntity.ok(followService.getFollowed(userId));
     }
 
-    // GET /groups/{groupId}/following - Get followers for a group
-    @GetMapping("/groups/{groupId}/followers")
+    /**
+     * Get users who follow group
+     * @param groupId current group id
+     * @return group followers
+     */
+    @GetMapping("/followers/groups/{groupId}")
     @Operation(summary = "Get users following a group", responses = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "404", description = "Group not found"),
             @ApiResponse(responseCode = "500", description = "Server error")
     })
-    public ResponseEntity<List<UUID>> getFollowersForGroup(@PathVariable UUID groupId) {
-        return ResponseEntity.ok(followService.getFollowersForGroup(groupId));
+    public ResponseEntity<List<UUID>> getFollowersGroup(@PathVariable UUID groupId) {
+        return ResponseEntity.ok(followService.getGroupFollowers(groupId));
     }
 
-    // GET /groups/{groupId}/following - Get users following a group
-    @GetMapping("/groups/{userId}/following")
-    @Operation(summary = "Get users following a group", responses = {
+    /**
+     * Get the groups followed by the user
+     * @param userId current user id
+     * @return followed groups
+     */
+    @GetMapping("/followed/groups/{userId}")
+    @Operation(summary = "Get current user groups", responses = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "404", description = "Group not found"),
             @ApiResponse(responseCode = "500", description = "Server error")
     })
-    public ResponseEntity<List<UUID>> getUsersFollowingGroup(@PathVariable UUID userId) {
-        return ResponseEntity.ok(followService.getUsersFollowingGroup(userId));
+    public ResponseEntity<List<UUID>> getFollowedGroup(@PathVariable UUID userId) {
+        return ResponseEntity.ok(followService.getFollowedGroups(userId));
     }
 
-    // POST /users/{followingId} - Follow or unfollow a user
-    @PostMapping("/users")
+    /**
+     * Follow or unfollow a user
+     * @param followCommand
+     * @return
+     */
+    @PostMapping("/follow")
     @Operation(summary = "Follow or unfollow a user", responses = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "404", description = "User not found"),
@@ -85,8 +105,12 @@ public class FollowController {
         return ResponseEntity.ok("OK");
     }
 
-    // POST /groups/{groupId} - Follow a group
-    @PostMapping("/groups")
+    /**
+     * Follow or unfollow a group
+     * @param followCommand
+     * @return
+     */
+    @PostMapping("/follow/groups")
     @Operation(summary = "Follow a group", responses = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "404", description = "Group not found"),

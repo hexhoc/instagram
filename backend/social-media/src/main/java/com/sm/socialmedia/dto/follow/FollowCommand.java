@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +18,7 @@ public class FollowCommand {
     @NotNull
     private UUID userId;
 
-    @Schema(description = "following id")
+    @Schema(description = "followed id")
     @NotNull
-    private UUID followingId;
+    private UUID followedId;
 }
